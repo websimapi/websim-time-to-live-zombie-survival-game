@@ -61,6 +61,8 @@ export function initWorld() {
       structures = state.structures;
     }
   });
+  
+  return scene; // Return the scene so it can be shared
 }
 
 // Generate resources in the world

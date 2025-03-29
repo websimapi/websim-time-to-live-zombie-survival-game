@@ -7,9 +7,9 @@ let room;
 let scene;
 
 // Initialize zombies
-export function initZombies() {
+export function initZombies(worldScene) {
   room = new WebsimSocket();
-  scene = new THREE.Scene();
+  scene = worldScene; // Use the provided scene
 }
 
 // Spawn a new zombie
@@ -195,4 +195,3 @@ function isHostPlayer() {
   const clientIds = Object.keys(room.peers);
   return clientIds.length > 0 && clientIds[0] === room.clientId;
 }
-

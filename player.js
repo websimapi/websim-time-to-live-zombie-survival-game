@@ -8,10 +8,12 @@ let playerDirection = { x: 0, y: 0 };
 let selectedBlockId = null;
 let mouse = { x: 0, y: 0 };
 let raycaster = new THREE.Raycaster();
+let scene; // Add scene variable
 
 // Initialize player
-export function initPlayer(roomInstance) {
+export function initPlayer(roomInstance, worldScene) {
   room = roomInstance;
+  scene = worldScene; // Store the scene reference
   
   // Set up keyboard input handling
   document.addEventListener('keydown', handleKeyDown);
@@ -427,4 +429,3 @@ function equipItemFromSlot(slotIndex) {
     equipItem(itemType);
   }
 }
-

@@ -1,7 +1,7 @@
 import config from './config.js';
 import { initWorld, updateWorld, renderWorld, getWorldState, placeBlock, removeBlock } from './world.js';
 import { initPlayer, updatePlayer, renderPlayer, handlePlayerMovement, getSelectedBlock, getInventory } from './player.js';
-import { spawnZombie, updateZombies, renderZombies } from './zombie.js';
+import { spawnZombie, updateZombies, renderZombies, initZombies } from './zombie.js';
 import { initCrafting, toggleCraftingPanel, craftItem } from './crafting.js';
 import { initBuilding, toggleBuildPanel, buildStructure } from './building.js';
 
@@ -60,8 +60,9 @@ async function initGame() {
   room.subscribePresenceUpdateRequests(handlePresenceUpdateRequests);
 
   // Initialize game components
-  initWorld();
-  initPlayer(room);
+  const worldScene = initWorld();
+  initPlayer(room, worldScene);
+  initZombies(worldScene);
   initCrafting(room);
   initBuilding(room);
 
@@ -267,4 +268,3 @@ function gameLoop(timestamp = 0) {
 }
 
 window.addEventListener('load', initGame);
-
