@@ -28,7 +28,8 @@ async function initGame() {
       worldBlocks: {},
       structures: {},
       gameTime: 0,
-      isNight: false
+      isNight: false,
+      environmentSeed: Math.floor(Math.random() * 1000)
     });
   }
 

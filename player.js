@@ -1,6 +1,6 @@
 import config from './config.js';
 import * as THREE from 'three';
-import { updateCameraPosition, damageBlock } from './world.js';
+import { updateCameraPosition, damageBlock, isPositionValid } from './world.js';
 
 let room;
 let playerMeshes = {};
@@ -196,11 +196,15 @@ export function updatePlayer(deltaTime) {
     const newX = room.presence[room.clientId].x + normalizedDir.x * playerSpeed;
     const newY = room.presence[room.clientId].y + normalizedDir.y * playerSpeed;
     
-    // Update position in presence
-    room.updatePresence({
-      x: newX,
-      y: newY
-    });
+    // Check if new position is valid (collision detection)
+    const { isPositionValid } = await import('./world.js');
+    if (isPositionValid(newX, newY, config.PLAYER_SIZE)) {
+      // Update position in presence
+      room.updatePresence({
+        x: newX,
+        y: newY
+      });
+    }
   }
   
   // Update camera to follow player
@@ -253,35 +257,76 @@ export function renderPlayer(presenceData) {
 
 // Create a player mesh
 function createPlayerMesh(clientId) {
-  const playerGeometry = new THREE.BoxGeometry(0.8, 0.8, 1.6);
+  // Use a more detailed player model
+  const playerGroup = new THREE.Group();
   
-  // Use different color for current player
+  // Body
+  const bodyGeometry = new THREE.BoxGeometry(0.8, 0.8, 1.6);
   const playerColor = clientId === room.clientId ? 0x42b883 : 0xff6347;
-  const playerMaterial = new THREE.MeshBasicMaterial({ color: playerColor });
+  const bodyMaterial = new THREE.MeshStandardMaterial({ 
+    color: playerColor,
+    roughness: 0.7,
+    metalness: 0.3
+  });
+  const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+  bodyMesh.position.z = 0.8;
+  playerGroup.add(bodyMesh);
   
-  const playerMesh = new THREE.Mesh(playerGeometry, playerMaterial);
-  playerMesh.position.z = 0.8; // Raise player off the ground
+  // Head
+  const headGeometry = new THREE.SphereGeometry(0.4, 8, 8);
+  const headMaterial = new THREE.MeshStandardMaterial({ 
+    color: playerColor,
+    roughness: 0.7,
+    metalness: 0.3
+  });
+  const headMesh = new THREE.Mesh(headGeometry, headMaterial);
+  headMesh.position.z = 1.8;
+  playerGroup.add(headMesh);
+  
+  // Arms
+  const armGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.8);
+  const armMaterial = new THREE.MeshStandardMaterial({ color: playerColor });
+  
+  const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+  leftArm.position.set(-0.55, 0, 0.8);
+  playerGroup.add(leftArm);
+  
+  const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+  rightArm.position.set(0.55, 0, 0.8);
+  playerGroup.add(rightArm);
+  
+  // Legs
+  const legGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.8);
+  const legMaterial = new THREE.MeshStandardMaterial({ color: playerColor });
+  
+  const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+  leftLeg.position.set(-0.25, 0, 0.4);
+  playerGroup.add(leftLeg);
+  
+  const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+  rightLeg.position.set(0.25, 0, 0.4);
+  playerGroup.add(rightLeg);
   
   // Create a weapon mesh
   const weaponGeometry = new THREE.BoxGeometry(0.2, 1.2, 0.1);
-  const weaponMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
+  const weaponMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
   const weaponMesh = new THREE.Mesh(weaponGeometry, weaponMaterial);
   
-  weaponMesh.position.y = 0.8; // Position the weapon to the right of the player
+  weaponMesh.position.y = 0.8;
   weaponMesh.visible = false; // Hide by default
-  playerMesh.add(weaponMesh);
-  playerMesh.userData.weaponMesh = weaponMesh;
+  playerGroup.add(weaponMesh);
+  playerGroup.userData.weaponMesh = weaponMesh;
   
   // Add username text
   if (room.peers[clientId]) {
     const peerInfo = room.peers[clientId];
     const textSprite = createTextSprite(peerInfo.username);
-    textSprite.position.z = 1.5;
-    playerMesh.add(textSprite);
+    textSprite.position.z = 2.2;
+    playerGroup.add(textSprite);
   }
   
-  playerMeshes[clientId] = playerMesh;
-  scene.add(playerMesh);
+  playerMeshes[clientId] = playerGroup;
+  scene.add(playerGroup);
 }
 
 // Update player's weapon based on equipped item

@@ -5,12 +5,14 @@ export default {
   
   // Player settings
   PLAYER_SPEED: 5,
+  PLAYER_SIZE: 0.8, // Added player size for collision detection
   PLAYER_MAX_HEALTH: 100,
   PLAYER_ATTACK_RANGE: 2,
   PLAYER_ATTACK_DAMAGE: 20,
   
   // Zombie settings
   ZOMBIE_SPEED: 3,
+  ZOMBIE_SIZE: 0.8, // Added zombie size for collision detection
   ZOMBIE_DAMAGE: 10,
   ZOMBIE_SPAWN_RATE: 0.2, // Zombies per second during night
   ZOMBIE_MAX_HEALTH: 50,
@@ -72,4 +74,3 @@ export default {
     }
   }
 };
-

@@ -37,28 +37,73 @@ export function spawnZombie(zombieId, x, y) {
 
 // Create a zombie mesh
 function createZombieMesh(zombieId, x, y) {
-  const zombieGeometry = new THREE.BoxGeometry(0.8, 0.8, 1.8);
-  const zombieMaterial = new THREE.MeshBasicMaterial({ color: 0x2E8B57 });
-  const zombieMesh = new THREE.Mesh(zombieGeometry, zombieMaterial);
+  const zombieGroup = new THREE.Group();
   
-  zombieMesh.position.x = x;
-  zombieMesh.position.y = y;
-  zombieMesh.position.z = 0.9; // Slightly taller than players
+  // Body
+  const bodyGeometry = new THREE.BoxGeometry(0.8, 0.8, 1.8);
+  const bodyMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x2E8B57,
+    roughness: 0.8,
+    metalness: 0.2
+  });
+  const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+  bodyMesh.position.z = 0.9;
+  zombieGroup.add(bodyMesh);
   
-  // Add eyes
+  // Head
+  const headGeometry = new THREE.SphereGeometry(0.4, 8, 8);
+  const headMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x2E8B57,
+    roughness: 0.8,
+    metalness: 0.2
+  });
+  const headMesh = new THREE.Mesh(headGeometry, headMaterial);
+  headMesh.position.z = 2.0;
+  zombieGroup.add(headMesh);
+  
+  // Eyes
   const eyeGeometry = new THREE.SphereGeometry(0.1, 8, 8);
   const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
   
   const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-  leftEye.position.set(0.2, 0.3, 0.4);
-  zombieMesh.add(leftEye);
+  leftEye.position.set(0.2, 0.2, 2.1);
+  zombieGroup.add(leftEye);
   
   const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-  rightEye.position.set(-0.2, 0.3, 0.4);
-  zombieMesh.add(rightEye);
+  rightEye.position.set(-0.2, 0.2, 2.1);
+  zombieGroup.add(rightEye);
   
-  zombieMeshes[zombieId] = zombieMesh;
-  scene.add(zombieMesh);
+  // Arms (longer and more menacing)
+  const armGeometry = new THREE.BoxGeometry(0.3, 0.3, 1);
+  const armMaterial = new THREE.MeshStandardMaterial({ color: 0x2E8B57 });
+  
+  const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+  leftArm.position.set(-0.55, 0, 0.9);
+  leftArm.rotation.x = -0.3;
+  zombieGroup.add(leftArm);
+  
+  const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+  rightArm.position.set(0.55, 0, 0.9);
+  rightArm.rotation.x = -0.3;
+  zombieGroup.add(rightArm);
+  
+  // Legs
+  const legGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.9);
+  const legMaterial = new THREE.MeshStandardMaterial({ color: 0x2E8B57 });
+  
+  const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+  leftLeg.position.set(-0.25, 0, 0.45);
+  zombieGroup.add(leftLeg);
+  
+  const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+  rightLeg.position.set(0.25, 0, 0.45);
+  zombieGroup.add(rightLeg);
+  
+  zombieGroup.position.x = x;
+  zombieGroup.position.y = y;
+  
+  zombieMeshes[zombieId] = zombieGroup;
+  scene.add(zombieGroup);
 }
 
 // Update zombies
@@ -91,12 +136,19 @@ export function updateZombies(deltaTime, roomInstance) {
           const normalizedDirX = dirX / distance;
           const normalizedDirY = dirY / distance;
           
-          updatedZombies[zombieId] = {
-            ...zombie,
-            x: zombie.x + normalizedDirX * config.ZOMBIE_SPEED * deltaTime,
-            y: zombie.y + normalizedDirY * config.ZOMBIE_SPEED * deltaTime,
-            targetId: targetPlayer.id
-          };
+          const newX = zombie.x + normalizedDirX * config.ZOMBIE_SPEED * deltaTime;
+          const newY = zombie.y + normalizedDirY * config.ZOMBIE_SPEED * deltaTime;
+          
+          // Check collision before moving
+          const { isPositionValid } = await import('./world.js');
+          if (isPositionValid(newX, newY, config.ZOMBIE_SIZE)) {
+            updatedZombies[zombieId] = {
+              ...zombie,
+              x: newX,
+              y: newY,
+              targetId: targetPlayer.id
+            };
+          }
           
           // Attack player if close enough
           if (distance < 1.5) {
