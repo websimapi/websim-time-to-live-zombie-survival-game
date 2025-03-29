@@ -247,4 +247,3 @@ export function updateCameraPosition(x, y) {
   camera.position.x = x;
   camera.position.y = y;
 }
-

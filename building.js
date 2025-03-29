@@ -112,3 +112,7 @@ function handlePlaceStructure(event) {
   document.body.style.cursor = 'default';
 }
 
+// Export the placeStructure function for use in world.js
+export function buildStructure(type, x, y) {
+  placeStructure(type, x, y);
+}
