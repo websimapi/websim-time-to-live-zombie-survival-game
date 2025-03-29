@@ -27,6 +27,11 @@ export function initWorld() {
   const canvas = document.getElementById('game-canvas');
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  
+  // Set scene position and scale appropriately
+  camera.zoom = 20;
+  camera.updateProjectionMatrix();
   
   // Add ground
   const groundGeometry = new THREE.PlaneGeometry(

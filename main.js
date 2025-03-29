@@ -249,7 +249,7 @@ function updateDayNightCycle(deltaTime) {
 let lastFrameTime = 0;
 
 function gameLoop(timestamp = 0) {
-  const deltaTime = (timestamp - lastFrameTime) / 1000;
+  const deltaTime = (timestamp - lastFrameTime) / 1000 || 0.016; // Provide default value
   lastFrameTime = timestamp;
   
   if (isGameInitialized) {
