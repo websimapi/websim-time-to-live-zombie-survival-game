@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time to Live - Zombie Survival Game</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <div id="ui-container">
+      <div id="player-info">
+        <div id="health-bar">
+          <div id="health-fill"></div>
+        </div>
+        <div id="inventory"></div>
+      </div>
+      <div id="crafting-panel" class="panel hidden">
+        <h2>Crafting</h2>
+        <div id="crafting-options"></div>
+        <button id="close-crafting">Close</button>
+      </div>
+      <div id="build-panel" class="panel hidden">
+        <h2>Build</h2>
+        <div id="build-options"></div>
+        <button id="close-build">Close</button>
+      </div>
+      <div id="day-night-indicator">
+        <div id="sun"></div>
+      </div>
+      <div id="players-list"></div>
+    </div>
+    <div id="game-overlay" class="hidden">
+      <div id="death-screen" class="hidden">
+        <h2>You Died!</h2>
+        <p>Zombies got the better of you...</p>
+        <button id="respawn-btn">Respawn</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js" type="module"></script>
+  <script src="world.js" type="module"></script>
+  <script src="player.js" type="module"></script>
+  <script src="zombie.js" type="module"></script>
+  <script src="crafting.js" type="module"></script>
+  <script src="building.js" type="module"></script>
+  <script src="main.js" type="module"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+  background-color: #111;
+}
+
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#game-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#ui-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#ui-container button {
+  pointer-events: auto;
+}
+
+#player-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+#health-bar {
+  width: 200px;
+  height: 20px;
+  background-color: #333;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+#health-fill {
+  height: 100%;
+  width: 100%;
+  background-color: #f44336;
+  transition: width 0.3s ease;
+}
+
+#inventory {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+
+.inventory-item {
+  width: 40px;
+  height: 40px;
+  background-color: #555;
+  border: 2px solid #777;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  position: relative;
+  pointer-events: auto;
+}
+
+.inventory-item.selected {
+  border-color: #ffc107;
+  box-shadow: 0 0 10px #ffc107;
+}
+
+.inventory-count {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(51, 51, 51, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  min-width: 300px;
+  pointer-events: auto;
+}
+
+.panel h2 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.panel button {
+  padding: 8px 15px;
+  margin-top: 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.panel button:hover {
+  background-color: #45a049;
+}
+
+#crafting-options, #build-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.crafting-item, .build-item {
+  padding: 10px;
+  background-color: #444;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.crafting-item:hover, .build-item:hover {
+  background-color: #555;
+}
+
+.crafting-item.disabled, .build-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#day-night-indicator {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 100px;
+  height: 50px;
+  background: linear-gradient(to bottom, #87CEEB, #F08080);
+  border-radius: 50px 50px 0 0;
+  overflow: hidden;
+  border: 2px solid #fff;
+}
+
+#sun {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #FFA500;
+  border-radius: 50%;
+  top: 5px;
+  left: 5px;
+  box-shadow: 0 0 10px #FFA500;
+  transition: all 1s linear;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#game-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+#death-screen {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+}
+
+#death-screen h2 {
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+#respawn-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#respawn-btn:hover {
+  background-color: #45a049;
+}
+
+#players-list {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  max-width: 200px;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.player-avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.player-name {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
