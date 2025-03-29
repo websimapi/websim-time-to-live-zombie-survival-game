@@ -197,14 +197,15 @@ export function updatePlayer(deltaTime) {
     const newY = room.presence[room.clientId].y + normalizedDir.y * playerSpeed;
     
     // Check if new position is valid (collision detection)
-    const { isPositionValid } = await import('./world.js');
-    if (isPositionValid(newX, newY, config.PLAYER_SIZE)) {
-      // Update position in presence
-      room.updatePresence({
-        x: newX,
-        y: newY
-      });
-    }
+    import('./world.js').then(({ isPositionValid }) => {
+      if (isPositionValid(newX, newY, config.PLAYER_SIZE)) {
+        // Update position in presence
+        room.updatePresence({
+          x: newX,
+          y: newY
+        });
+      }
+    });
   }
   
   // Update camera to follow player

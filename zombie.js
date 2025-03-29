@@ -140,20 +140,21 @@ export function updateZombies(deltaTime, roomInstance) {
           const newY = zombie.y + normalizedDirY * config.ZOMBIE_SPEED * deltaTime;
           
           // Check collision before moving
-          const { isPositionValid } = await import('./world.js');
-          if (isPositionValid(newX, newY, config.ZOMBIE_SIZE)) {
-            updatedZombies[zombieId] = {
-              ...zombie,
-              x: newX,
-              y: newY,
-              targetId: targetPlayer.id
-            };
-          }
-          
-          // Attack player if close enough
-          if (distance < 1.5) {
-            attackPlayer(targetPlayer.id);
-          }
+          import('./world.js').then(({ isPositionValid }) => {
+            if (isPositionValid(newX, newY, config.ZOMBIE_SIZE)) {
+              updatedZombies[zombieId] = {
+                ...zombie,
+                x: newX,
+                y: newY,
+                targetId: targetPlayer.id
+              };
+            }
+            
+            // Attack player if close enough
+            if (distance < 1.5) {
+              attackPlayer(targetPlayer.id);
+            }
+          });
         }
       }
     }
